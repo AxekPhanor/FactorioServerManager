@@ -76,7 +76,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    content: "Démarrage du serveur..."
+                    content: "Le serveur est ouvert!"
                 }
             });
         }
