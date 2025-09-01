@@ -65,6 +65,14 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         }
         if (name === 'start') {
             await instanceManager.start();
+            let status = "";
+            while(status == "ACTIVE"){
+                status = instanceManager.status();
+                if (status === "SHUTOFF") {
+                    await sleep(1000);
+                }
+            }
+
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
@@ -97,4 +105,14 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 
     console.error('unknown interaction type', type);
     return res.status(400).json({ error: 'unknown interaction type' });
+});
+
+app.get('/test', async function (req, res) {
+    try {
+        const status = await instanceManager.status();
+        res.send(status);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Erreur lors de la récupération du status");
+    }
 });

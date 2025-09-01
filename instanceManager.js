@@ -14,6 +14,15 @@ async function instance() {
     });
 }
 
+async function status() {
+    return new Promise((resolve, reject) => {
+        ovh.request('GET', '/cloud/project/8b5103a48edb4a28998cff632f9b9f12/instance', (err, result) => {
+            if (err) return reject(err);
+            resolve(result[0].status);
+        });
+    });
+}
+
 async function start() {
     await ovh.request('POST', '/cloud/project/8b5103a48edb4a28998cff632f9b9f12/instance/bcdd4963-14ec-43cf-b08c-e9c2759303ee/start', function (err, result ) {
         if(err) {
@@ -50,4 +59,4 @@ async function reboot() {
     });
 }
 
-module.exports = { instance, start, stop, reboot };
+module.exports = { instance, status, start, stop, reboot };
