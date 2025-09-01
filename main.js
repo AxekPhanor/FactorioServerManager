@@ -35,6 +35,10 @@ const rebootCommand = {
     type: 1,
 };
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 utils.InstallGlobalCommands(process.env.APP_ID, [instanceCommand, startCommmand, stopCommand, rebootCommand]);
 
 app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async function (req, res) {
