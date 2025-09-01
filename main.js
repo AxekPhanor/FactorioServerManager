@@ -69,6 +69,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         }
         if (name === 'start') {
             await instanceManager.start();
+            
             let status = "";
             while(status != "ACTIVE"){
                 status = await instanceManager.status();
@@ -86,6 +87,15 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         }
         if (name === 'stop') {
             await instanceManager.stop();
+
+            let status = "";
+            while(status != "SHUTOFF"){
+                status = await instanceManager.status();
+                if (status === "ACTIVE") {
+                    await sleep(1000);
+                }
+            }
+
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
