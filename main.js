@@ -71,7 +71,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
             await instanceManager.start();
             let status = "";
             while(status == "ACTIVE"){
-                status = instanceManager.status();
+                status = await instanceManager.status();
                 if (status === "SHUTOFF") {
                     await sleep(1000);
                 }
