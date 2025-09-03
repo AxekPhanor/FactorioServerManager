@@ -12,8 +12,8 @@ app.listen(port, () => {
 });
 
 const instanceCommand = {
-    name: 'instance',
-    description: 'Instance command',
+    name: 'status',
+    description: 'Status command',
     type: 1,
 };
 
@@ -48,15 +48,25 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     if (type === InteractionType.APPLICATION_COMMAND) {
         const { name } = data;
 
-        if (name === 'instance') {
+        if (name === 'status') {
             try {
-                const content = await instanceManager.instance();
-                return res.send({
+                const content = await instanceManager.status();
+                if(content == "ACTIVE") {
+                    return res.send({
                     type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     data: {
-                        content: '```json\n' + JSON.stringify(content, null, 2) + '\n```'
+                        content: '```json\n' + JSON.stringify(content + " 🟢", null, 2) + '\n```'
                     }
                 });
+                }
+                else {
+                    return res.send({
+                    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    data: {
+                        content: '```json\n' + JSON.stringify(content + " 🔴", null, 2) + '\n```'
+                    }
+                });
+                }
             } catch (err) {
                 console.error(err);
                 return res.send({
@@ -69,14 +79,6 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         }
         if (name === 'start') {
             await instanceManager.start();
-            
-            let status = "";
-            while(status != "ACTIVE"){
-                status = await instanceManager.status();
-                if (status === "SHUTOFF") {
-                    await sleep(1000);
-                }
-            }
 
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -87,14 +89,6 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         }
         if (name === 'stop') {
             await instanceManager.stop();
-
-            let status = "";
-            while(status != "SHUTOFF"){
-                status = await instanceManager.status();
-                if (status === "ACTIVE") {
-                    await sleep(1000);
-                }
-            }
 
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
