@@ -24,7 +24,7 @@ async function status() {
 }
 
 async function start() {
-    await ovh.request('POST', '/cloud/project/8b5103a48edb4a28998cff632f9b9f12/instance/bcdd4963-14ec-43cf-b08c-e9c2759303ee/start', function (err, result ) {
+    await ovh.request('POST', '/cloud/project/8b5103a48edb4a28998cff632f9b9f12/instance/bcdd4963-14ec-43cf-b08c-e9c2759303ee/unshelve', function (err, result ) {
         if(err) {
             console.error(err);
         }
@@ -36,7 +36,7 @@ async function start() {
 }
 
 async function stop() {
-    await ovh.request('POST', '/cloud/project/8b5103a48edb4a28998cff632f9b9f12/instance/bcdd4963-14ec-43cf-b08c-e9c2759303ee/stop', function (err, result ) {
+    await ovh.request('POST', '/cloud/project/8b5103a48edb4a28998cff632f9b9f12/instance/bcdd4963-14ec-43cf-b08c-e9c2759303ee/shelve', function (err, result ) {
         if(err) {
             console.error(err);
         }
